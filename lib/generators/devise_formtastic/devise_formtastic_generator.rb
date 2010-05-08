@@ -7,7 +7,7 @@ class DeviseFormtasticGenerator < Rails::Generators::Base
                    :desc => "The scope to copy views to"
   
   def self.source_root
-    File.expand_path("views/devise", __FILE__)
+    File.expand_path("views", File.dirname(__FILE__))
   end
 
   def copy_views
