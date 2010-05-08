@@ -1,0 +1,13 @@
+<h2>Resend confirmation instructions</h2>
+
+<%= semantic_form_for(resource, :url => confirmation_path(resource_name)) do |form| %>
+  <%= form.error_messages :header_message => 'There was an error' %>
+
+  <%= form.inputs :email %>
+
+  <%= form.buttons do %>
+    <%= form.commit_button "Resend confirmation instructions" %>
+  <% end %>
+<% end %>
+
+<%= render :partial => "devise/shared/links" %>

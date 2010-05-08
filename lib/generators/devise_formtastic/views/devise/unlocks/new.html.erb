@@ -1,0 +1,13 @@
+<h2>Resend unlock instructions</h2>
+
+<%= semantic_form_for(resource, :url => unlock_path(resource_name)) do |form| %>
+  <%= form.semantic_errors :title => 'There was an error' %>
+
+  <%= form.inputs :email %>
+
+  <%= form.buttons do %>
+    <%= form.commit_button "Resend unlock instructions" %>
+  <% end %>
+<% end %>
+
+<%= render :partial => "devise/shared/links" %>

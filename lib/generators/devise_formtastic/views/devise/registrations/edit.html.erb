@@ -1,0 +1,22 @@
+<h2>Edit <%= resource_name.to_s.humanize %></h2>
+
+<%= semantic_form_for(resource, :url => registration_path(resource_name)) do |form| %>
+  <%= form.error_messages :header_message => 'There was an error' %>
+
+  <%= form.inputs do %>
+    <%= form.input :email %>
+    <%= form.input :password, :hint => "(leave blank if you don't want to change it)" %>
+    <%= form.input :password_confirmation %>
+    <%= form.input :current_password, :hint => "(we need your current password to confirm your changes)" %>
+  <% end %>
+  
+  <%= form.buttons do %>
+    <%= form.commit_button 'Update' %>
+  <% end %>
+<% end %>
+
+<h3>Cancel my account</h3>
+
+<p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %>.</p>
+
+<%= link_to "Back", :back %>

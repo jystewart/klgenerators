@@ -1,0 +1,15 @@
+<h2>Change your password</h2>
+
+<%= semantic_form_for(resource, :url => password_path(resource_name)) do |form| %>
+  <%= form.error_messages :header_message => 'There was an error' %>
+  <%= form.hidden_field :reset_password_token %>
+
+  <%= form.inputs :password, :password_confirmation %>
+
+  <%= form.buttons do %>
+    <%= form.commit_button "Change my password"  %>
+  <% end %>
+
+<% end %>
+
+<%= render :partial => "devise/shared/links" %>
