@@ -1,0 +1,1 @@
+rails g devise_features MODEL_NAME
