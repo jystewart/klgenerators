@@ -1,5 +1,17 @@
 Given /^no (.+?) exists with an email of "(.*)"$/ do |authenticable, email|
-  assert_nil authenticable.camelize.constantize.find_by_email(email)
+  assert_nil authenticable.camelize.constantize.find(:conditions => {:email => email}).first
+end
+
+Given /^I signed up as a (.+?) with "(.*)\/(.*)"$/ do |authenticable, email, password|
+  user = Factory authenticable.to_sym, 
+    :email                 => email, 
+    :password              => password,
+    :password_confirmation => password
+end
+
+Given /^I am signed up and confirmed as (.+?) "(.*)\/(.*)"$/ do |authenticable, email, password|
+  user = Factory authenticable.to_sym, :email => email, :password => password, :password_confirmation => password
+  user.confirm!
 end
 
 Given /^I am signed in as the (.+?) with credentials "(.*)\/(.*)"$/ do |authenticable, email, password|
@@ -9,14 +21,10 @@ Given /^I am signed in as the (.+?) with credentials "(.*)\/(.*)"$/ do |authenti
   When sign_in_step
 end
 
-
-Given /^I signed up as a (.+?) with "(.*)\/(.*)"$/ do |authenticable, email, password|
-  user = Factory authenticable.to_sym, :email => email, :password => password, :password_confirmation => password
-end
-
-Given /^I am signed up and confirmed as (.+?) "(.*)\/(.*)"$/ do |authenticable, email, password|
-  user = Factory authenticable.to_sym, :email => email, :password => password, :password_confirmation => password
-  user.confirm!
+Given /^I requested a new password for "(.*?)"$/ do |email|
+  When %{I go to the fan new password page}
+  And %{I fill in "Email" with "#{email}"}
+  And %{I press "Send me reset password instructions"}
 end
 
 When /^I sign in( with "remember me")? as (.+?) "(.*)\/(.*)"$/ do |remember, authenticable, email, password|
@@ -28,8 +36,8 @@ When /^I sign in( with "remember me")? as (.+?) "(.*)\/(.*)"$/ do |remember, aut
 end
 
 Then /^I should not be signed in as a (.+?)$/ do |authenticable|
-  email_path = send("new_#{authenticable}_password_path")
-  page.should have_css("a[href='#{email_path}']")
+  path = send("new_#{authenticable}_registration_path")
+  page.should have_css("a[href='#{path}']")
 end
 
 Then /^I should be signed in as a (.+?)$/ do |authenticable|
@@ -45,21 +53,28 @@ When /^I return next time$/ do
   When %{I go to the homepage}
 end
 
+When /^I follow the link in the password reset email for (.+?) "([^\"]*)"$/ do |authenticable, email|
+  user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
+  method = "edit_#{authenticable}_password_path"
+  visit send(method, :reset_password_token => user.reset_password_token)
+end
+
+
 Then /^I should see error messages$/ do
-  page.should have_css('div[id=error_explanation]')
+  page.should have_css('#errorExplanation')
 end
 
 When /^I follow the confirmation link sent to (.+?) "([^\"]*)"$/ do |authenticable, email|
-  user = authenticable.camelize.constantize.find_by_email(email)
+  user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
   method = "#{authenticable}_confirmation_path"
   visit send(method, :confirmation_token => user.confirmation_token)
 end
 
 Then /^a confirmation message should be sent to (.+?) "([^\"]*)"$/ do |authenticable, email|
-  user = authenticable.camelize.constantize.find_by_email(email)
+  user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
   sent = ActionMailer::Base.deliveries.last
   assert_equal [email], sent.to
-  assert_match /confirm/i, sent.subject
+  assert_match /Activate your Ninja Tune XX account now/i, sent.subject
   assert !user.confirmation_token.blank?
   
   if sent.parts.size == 1
@@ -71,3 +86,13 @@ Then /^a confirmation message should be sent to (.+?) "([^\"]*)"$/ do |authentic
   assert_match /#{user.confirmation_token}/, text_component
 end
 
+Then /^a password reset email should be sent to (.+?) "([^\"]*)"$/ do |authenticable, email|
+  sent = ActionMailer::Base.deliveries.last
+  assert_equal [email], sent.to
+  assert_match /Resetting your Ninja Tune XX password/i, sent.subject
+end
+
+Then /^the password for (.+?) "([^\"]*)" should be "([^\"]*)"$/ do |authenticable, email, password|
+  user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
+  user.valid_password?(password)
+end

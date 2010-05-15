@@ -14,13 +14,17 @@ class DeviseFeaturesGenerator < Rails::Generators::Base
   end
   
   def copy_features
-    template "features/authenticable_sign_in.rb", "features/#{model.downcase}_sign_in.rb"
+    template "features/authenticable_sign_in.rb", "features/#{model.downcase}_sign_in.feature"
 
     if Kernel.const_get(model).included_modules.include?(Devise::Models::Registerable)
-      template "features/authenticable_sign_up.rb", "features/#{model.downcase}_sign_up.rb"
+      template "features/authenticable_sign_up.rb", "features/#{model.downcase}_sign_up.feature"
     end
     
-    # TODO: Handle Devise::Models::Confirmable, Devise::Models::Recoverable, and maybe others
+    if Kernel.const_get(model).included_modules.include?(Devise::Models::Recoverable)
+      template "features/authenticable_password_reset.feature", "features/#{model.downcase}_password_reset.feature"
+    end
+    
+    # TODO: Handle Devise::Models::Confirmable and maybe others
     puts "You may need to define some paths in features/env/paths.rb"
   end
 end
