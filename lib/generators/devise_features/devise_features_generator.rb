@@ -10,14 +10,14 @@ class DeviseFeaturesGenerator < Rails::Generators::Base
   end
 
   def copy_step_definitions
-    directory "features/step_definitions", "features"
+    directory "features/step_definitions", "features/step_definitions"
   end
   
   def copy_features
-    template "features/authenticable_sign_in.rb", "features/#{model.downcase}_sign_in.feature"
+    template "features/authenticable_sign_in.feature", "features/#{model.downcase}_sign_in.feature"
 
     if Kernel.const_get(model).included_modules.include?(Devise::Models::Registerable)
-      template "features/authenticable_sign_up.rb", "features/#{model.downcase}_sign_up.feature"
+      template "features/authenticable_sign_up.feature", "features/#{model.downcase}_sign_up.feature"
     end
     
     if Kernel.const_get(model).included_modules.include?(Devise::Models::Recoverable)
