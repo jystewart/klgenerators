@@ -74,7 +74,7 @@ Then /^a confirmation message should be sent to (.+?) "([^\"]*)"$/ do |authentic
   user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
   sent = ActionMailer::Base.deliveries.last
   assert_equal [email], sent.to
-  assert_match /Activate your Ninja Tune XX account now/i, sent.subject
+  assert_match /Activate your account now/i, sent.subject
   assert !user.confirmation_token.blank?
   
   if sent.parts.size == 1
@@ -89,7 +89,7 @@ end
 Then /^a password reset email should be sent to (.+?) "([^\"]*)"$/ do |authenticable, email|
   sent = ActionMailer::Base.deliveries.last
   assert_equal [email], sent.to
-  assert_match /Resetting your Ninja Tune XX password/i, sent.subject
+  assert_match /Reset password instructions/i, sent.subject
 end
 
 Then /^the password for (.+?) "([^\"]*)" should be "([^\"]*)"$/ do |authenticable, email, password|
