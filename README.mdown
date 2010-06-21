@@ -5,4 +5,5 @@ A gem providing a few simple generators for projects we're working on.
 ## Usage ##
 
 > rails generate devise_features MODEL # Generates cucumber features for devise
+> 
 > rails generate devise_formtastic # Generates devise views based on formtastic
