@@ -25,7 +25,7 @@ class DeviseFeaturesGenerator < Rails::Generators::Base
     end
     
     # TODO: Handle Devise::Models::Confirmable and maybe others
-    puts "You may need to define some paths in features/env/paths.rb"
+    puts "You may need to edit the factories and define some paths in features/env/paths.rb"
     puts "
 when /the (.+?) sign in page/
   send(\"new_\#{$1}_session_path\")
