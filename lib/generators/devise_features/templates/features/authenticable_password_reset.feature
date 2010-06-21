@@ -4,8 +4,7 @@ Feature: Sign in
   Should be able to sign in
 
   Background:
-    Given a current week exists
-    And I am signed up and confirmed as <%= model.downcase %> "email@person.com/password"
+    Given I am signed up and confirmed as <%= model.downcase %> "email@person.com/password"
 
   Scenario: <%= model %> requests new password
     When I go to the <%= model.downcase %> new password page
