@@ -15,7 +15,7 @@ Feature: Sign in
     And I should see "You will receive an email"
 
   Scenario: <%= model %> follows link to reset password
-    Given I requested a new password for "email@person.com"
+    Given I requested a new password for the <%= model.downcase %> with email "email@person.com"
     
     When I follow the link in the password reset email for <%= model.downcase %> "email@person.com"
     And I fill in "<%= model.downcase %>_password" with "newpassword"

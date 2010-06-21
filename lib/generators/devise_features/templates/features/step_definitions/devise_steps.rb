@@ -21,8 +21,8 @@ Given /^I am signed in as the (.+?) with credentials "(.*)\/(.*)"$/ do |authenti
   When sign_in_step
 end
 
-Given /^I requested a new password for "(.*?)"$/ do |email|
-  When %{I go to the fan new password page}
+Given /^I requested a new password for the (.+?) with email "(.*?)"$/ do |authenticable, email|
+  When %{I go to the #{authenticable} new password page}
   And %{I fill in "Email" with "#{email}"}
   And %{I press "Send me reset password instructions"}
 end
