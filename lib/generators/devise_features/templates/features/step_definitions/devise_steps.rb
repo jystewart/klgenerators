@@ -1,5 +1,5 @@
 Given /^no (.+?) exists with an email of "(.*)"$/ do |authenticable, email|
-  assert_nil authenticable.camelize.constantize.find(:conditions => {:email => email}).first
+  assert_nil authenticable.camelize.constantize.find_by_email(email)
 end
 
 Given /^I signed up as a (.+?) with "(.*)\/(.*)"$/ do |authenticable, email, password|
@@ -54,7 +54,7 @@ When /^I return next time$/ do
 end
 
 When /^I follow the link in the password reset email for (.+?) "([^\"]*)"$/ do |authenticable, email|
-  user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
+  user = authenticable.camelize.constantize.find_by_email(email)
   method = "edit_#{authenticable}_password_path"
   visit send(method, :reset_password_token => user.reset_password_token)
 end
@@ -65,13 +65,13 @@ Then /^I should see error messages$/ do
 end
 
 When /^I follow the confirmation link sent to (.+?) "([^\"]*)"$/ do |authenticable, email|
-  user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
+  user = authenticable.camelize.constantize.find_by_email(email)
   method = "#{authenticable}_confirmation_path"
   visit send(method, :confirmation_token => user.confirmation_token)
 end
 
 Then /^a confirmation message should be sent to (.+?) "([^\"]*)"$/ do |authenticable, email|
-  user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
+  user = authenticable.camelize.constantize.find_by_email(email)
   sent = ActionMailer::Base.deliveries.last
   assert_equal [email], sent.to
   assert_match /Activate your account now/i, sent.subject
@@ -93,6 +93,6 @@ Then /^a password reset email should be sent to (.+?) "([^\"]*)"$/ do |authentic
 end
 
 Then /^the password for (.+?) "([^\"]*)" should be "([^\"]*)"$/ do |authenticable, email, password|
-  user = authenticable.camelize.constantize.find(:conditions => {:email => email}).first
+  user = authenticable.camelize.constantize.find_by_email(email)
   user.valid_password?(password)
 end
