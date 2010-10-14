@@ -2,20 +2,20 @@ Given /^no (.+?) exists with an email of "(.*)"$/ do |authenticable, email|
   assert_nil authenticable.camelize.constantize.find_by_email(email)
 end
 
-Given /^I signed up as a (.+?) with "(.*)\/(.*)"$/ do |authenticable, email, password|
-  user = Factory authenticable.to_sym, 
+Given /^I signed up as an? (.+?) with "(.*)\/(.*)"$/ do |authenticable, email, password|
+  @user = Factory authenticable.to_sym, 
     :email                 => email, 
     :password              => password,
     :password_confirmation => password
 end
 
 Given /^I am signed up and confirmed as (.+?) "(.*)\/(.*)"$/ do |authenticable, email, password|
-  user = Factory authenticable.to_sym, :email => email, :password => password, :password_confirmation => password
-  user.confirm! if user.respond_to?(:confirm!)
+  Given %{I signed up as a #{authenticable} with "#{email}/#{password}"}
+  @user.confirm! if @user.respond_to?(:confirm!)
 end
 
 Given /^I am signed in as the (.+?) with credentials "(.*)\/(.*)"$/ do |authenticable, email, password|
-  Given %W{I am signed up and confirmed as #{authenticable} "#{email}/#{password}"}
+  Given %{I am signed up and confirmed as #{authenticable} "#{email}/#{password}"}
   sign_in_step = "I sign in as #{authenticable} \"#{email}/#{password}\""
   When sign_in_step
 end
