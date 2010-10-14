@@ -11,12 +11,11 @@ end
 
 Given /^I am signed up and confirmed as (.+?) "(.*)\/(.*)"$/ do |authenticable, email, password|
   user = Factory authenticable.to_sym, :email => email, :password => password, :password_confirmation => password
-  user.confirm!
+  user.confirm! if user.respond_to?(:confirm!)
 end
 
 Given /^I am signed in as the (.+?) with credentials "(.*)\/(.*)"$/ do |authenticable, email, password|
-  user = Factory authenticable.to_sym, :email => email, :password => password, :password_confirmation => password
-  user.confirm! if user.respond_to?(:confirm!) 
+  Given %W{I am signed up and confirmed as #{authenticable} "#{email}/#{password}"}
   sign_in_step = "I sign in as #{authenticable} \"#{email}/#{password}\""
   When sign_in_step
 end
