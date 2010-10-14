@@ -30,6 +30,8 @@ class DeviseFeaturesGenerator < Rails::Generators::Base
 when /the (.+?) sign in page/
   send(\"new_\#{$1}_session_path\")
 when /the (.+?) sign up page/
-  send(\"new_\#{$1}_registration_path\")"
+  send(\"new_\#{$1}_registration_path\")
+when /the (.+?) new password page/
+  send(\"new_#{$1}_password_path\")"
   end
 end
