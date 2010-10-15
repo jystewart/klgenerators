@@ -32,6 +32,6 @@ when /the (.+?) sign in page/
 when /the (.+?) sign up page/
   send(\"new_\#{$1}_registration_path\")
 when /the (.+?) new password page/
-  send(\"new_#{$1}_password_path\")"
+  send(\"new_\#{$1}_password_path\")"
   end
 end
